@@ -1,3 +1,32 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Mobile-specific styles */
+@media (max-width: 768px) {
+  .mobile-optimized {
+    padding: 1rem;
+  }
+  
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* Native app specific styles */
+.capacitor-native {
+  /* Add any native-specific styling here */
+}
+
+/* Ensure proper viewport handling */
+html, body {
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Better touch interactions */
+button, .interactive {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}

@@ -3,8 +3,9 @@ import { motion } from 'framer-motion';
 import { Mic, MicOff, Send, Volume2 } from 'lucide-react';
 import { useSpeechRecognition } from '../hooks/useSpeechRecognition';
 import { useSpeechSynthesis } from '../hooks/useSpeechSynthesis';
-import { hadassahAI } from '../services/aiEngine';
+import { enhancedHadassahAI } from '../services/enhancedAiEngine';
 import { StorageService } from '../services/storage';
+import { NativeCapabilities } from '../services/nativeCapabilities';
 
 const useTheme = () => {
   const preferences = StorageService.getPreferences();
@@ -47,7 +48,7 @@ const VoiceInput: React.FC = () => {
     resetTranscript();
 
     try {
-      const aiResponse = hadassahAI.processCommand(userMessage);
+      const aiResponse = await enhancedHadassahAI.processCommand(userMessage);
       setResponse(aiResponse);
 
       // Save conversation

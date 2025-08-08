@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Play } from 'lucide-react';
-import { hadassahAI } from '../services/aiEngine';
+import { enhancedHadassahAI } from '../services/enhancedAiEngine';
 import { StorageService } from '../services/storage';
 
 interface Props {
@@ -9,7 +9,7 @@ interface Props {
 }
 
 const CommandGallery: React.FC<Props> = ({ onBack }) => {
-  const commands = hadassahAI.getCommands();
+  const commands = enhancedHadassahAI.getCommands();
   const preferences = StorageService.getPreferences();
   const isDark = preferences.darkMode;
   const contrast = preferences.contrast;

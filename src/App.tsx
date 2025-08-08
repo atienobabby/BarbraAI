@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
+import { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { NativeCapabilities } from './services/nativeCapabilities';
 import HomePage from './components/HomePage';
 import SettingsPage from './components/SettingsPage';
 import CommandGallery from './components/CommandGallery';
@@ -10,6 +12,20 @@ type Page = 'home' | 'settings' | 'commands';
 function App() {
   const [currentPage, setCurrentPage] = useState<Page>('home');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  useEffect(() => {
+    // Initialize native capabilities and request permissions
+    const initializeApp = async () => {
+      if (NativeCapabilities.isNative()) {
+        await NativeCapabilities.requestPermissions();
+        console.log('BarbraAI running as native app on:', NativeCapabilities.getPlatform());
+      } else {
+        console.log('BarbraAI running as web app');
+      }
+    };
+
+    initializeApp();
+  }, []);
 
   const handlePageChange = (page: Page) => {
     setCurrentPage(page);
