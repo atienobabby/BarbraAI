@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="BarbraAI - Your intelligent personal voice assistant powered by Hadassah" />
+    <meta name="theme-color" content="#3B82F6" />
+    <title>BarbraAI - Personal Voice Assistant</title>
+    
+    <!-- PWA Meta Tags -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="BarbraAI">
+    
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- Custom CSS for slider styling -->
+    <style>
+      .slider::-webkit-slider-thumb {
+        appearance: none;
+        height: 20px;
+        width: 20px;
+        border-radius: 50%;
+        background: #3B82F6;
+        cursor: pointer;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        transition: all 0.3s ease;
+      }
+      
+      .slider::-webkit-slider-thumb:hover {
+        transform: scale(1.1);
+        box-shadow: 0 4px 8px rgba(59, 130, 246, 0.4);
+      }
+      
+      .slider::-moz-range-thumb {
+        height: 20px;
+        width: 20px;
+        border-radius: 50%;
+        background: #3B82F6;
+        cursor: pointer;
+        border: none;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        transition: all 0.3s ease;
+      }
+      
+      .slider::-moz-range-thumb:hover {
+        transform: scale(1.1);
+        box-shadow: 0 4px 8px rgba(59, 130, 246, 0.4);
+      }
+      
+      /* Add speech recognition styles */
+      @keyframes pulse {
+        0% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.1); opacity: 0.7; }
+        100% { transform: scale(1); opacity: 1; }
+      }
+      
+      .listening-animation {
+        animation: pulse 1s infinite;
+      }
+      
+      /* Dark mode scrollbar */
+      .dark-scrollbar::-webkit-scrollbar {
+        width: 8px;
+      }
+      
+      .dark-scrollbar::-webkit-scrollbar-track {
+        background: rgba(55, 65, 81, 0.3);
+        border-radius: 4px;
+      }
+      
+      .dark-scrollbar::-webkit-scrollbar-thumb {
+        background: rgba(156, 163, 175, 0.5);
+        border-radius: 4px;
+      }
+      
+      .dark-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: rgba(156, 163, 175, 0.7);
+      }
+      
+      /* Enhanced 3D effects */
+      .card-3d {
+        transform-style: preserve-3d;
+        perspective: 1000px;
+      }
+      
+      .card-3d:hover {
+        transform: rotateX(5deg) rotateY(-5deg) translateZ(20px);
+      }
+    </style>
+  </head>
+  <body class="bg-gradient-to-br from-blue-50 to-teal-50 transition-colors duration-500">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
