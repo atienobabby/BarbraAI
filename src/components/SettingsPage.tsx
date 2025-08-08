@@ -1,133 +1,208 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import { ArrowLeft, Settings, Moon, Sun, Volume2, VolumeX, Palette } from 'lucide-react';
+import { StorageService } from '../services/storage';
 
 interface SettingsPageProps {
   onBack: () => void;
 }
 
 export default function SettingsPage({ onBack }: SettingsPageProps) {
-  const [darkMode, setDarkMode] = React.useState(false);
-  const [soundEnabled, setSoundEnabled] = React.useState(true);
-  const [highContrast, setHighContrast] = React.useState(false);
+  const [preferences, setPreferences] = React.useState(() => StorageService.getPreferences());
+
+  const updatePreference = (key: string, value: any) => {
+    const newPreferences = { ...preferences, [key]: value };
+    setPreferences(newPreferences);
+    StorageService.setPreferences({ [key]: value });
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white">
+    <div 
+      className={`min-h-screen transition-all duration-500 ${
+        preferences.darkMode 
+          ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' 
+          : 'bg-gradient-to-br from-blue-50 via-white to-teal-50'
+      }`}
+      style={{ filter: `contrast(${preferences.contrast})` }}
+    >
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="flex items-center mb-8">
-          <button
+          <motion.button
             onClick={onBack}
-            className="flex items-center gap-2 text-purple-300 hover:text-white transition-colors duration-200 group"
+            className={`p-3 rounded-2xl backdrop-blur-sm border transition-all duration-300 shadow-lg ${
+              preferences.darkMode
+                ? 'bg-gray-800/60 border-gray-600 hover:bg-gray-700/80 text-gray-200'
+                : 'bg-white/60 border-gray-200 hover:bg-white/80 text-gray-700'
+            }`}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
           >
-            <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform duration-200" />
-            Back
-          </button>
+            <ArrowLeft size={20} />
+          </motion.button>
         </div>
 
         {/* Settings Content */}
         <div className="max-w-2xl mx-auto">
           <div className="flex items-center gap-3 mb-8">
-            <Settings className="w-8 h-8 text-purple-400" />
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+            <Settings className={`w-8 h-8 transition-colors duration-300 ${
+              preferences.darkMode ? 'text-blue-400' : 'text-blue-600'
+            }`} />
+            <h1 className={`text-4xl font-bold bg-gradient-to-r bg-clip-text text-transparent transition-all duration-300 ${
+              preferences.darkMode 
+                ? 'from-blue-400 to-teal-400' 
+                : 'from-blue-600 to-teal-600'
+            }`}>
               Settings
             </h1>
           </div>
 
           <div className="space-y-6">
             {/* Theme Settings */}
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
-              <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
-                <Palette className="w-5 h-5 text-purple-400" />
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className={`backdrop-blur-sm rounded-3xl p-6 border shadow-xl transition-all duration-300 ${
+                preferences.darkMode
+                  ? 'bg-gray-800/60 border-gray-600'
+                  : 'bg-white/60 border-white/50'
+              }`}
+            >
+              <h2 className={`text-xl font-semibold mb-4 flex items-center gap-2 transition-colors duration-300 ${
+                preferences.darkMode ? 'text-white' : 'text-gray-800'
+              }`}>
+                <Palette className={`w-5 h-5 transition-colors duration-300 ${
+                  preferences.darkMode ? 'text-blue-400' : 'text-blue-600'
+                }`} />
                 Appearance
               </h2>
               
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <label className="text-lg font-medium">Dark Mode</label>
-                    <p className="text-sm text-gray-300">Toggle between light and dark themes</p>
+                    <label className={`text-lg font-medium transition-colors duration-300 ${
+                      preferences.darkMode ? 'text-white' : 'text-gray-800'
+                    }`}>Dark Mode</label>
+                    <p className={`text-sm transition-colors duration-300 ${
+                      preferences.darkMode ? 'text-gray-300' : 'text-gray-600'
+                    }`}>Toggle between light and dark themes</p>
                   </div>
                   <button
-                    onClick={() => setDarkMode(!darkMode)}
+                    onClick={() => updatePreference('darkMode', !preferences.darkMode)}
                     className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                      darkMode ? 'bg-purple-600' : 'bg-gray-600'
+                      preferences.darkMode ? 'bg-blue-600' : 'bg-gray-400'
                     }`}
                   >
                     <span
                       className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                        darkMode ? 'translate-x-6' : 'translate-x-1'
+                        preferences.darkMode ? 'translate-x-6' : 'translate-x-1'
                       }`}
                     />
-                    {darkMode ? (
-                      <Moon className="absolute left-1 w-3 h-3 text-purple-600" />
+                    {preferences.darkMode ? (
+                      <Moon className="absolute left-1 w-3 h-3 text-blue-600" />
                     ) : (
-                      <Sun className="absolute right-1 w-3 h-3 text-gray-600" />
+                      <Sun className="absolute right-1 w-3 h-3 text-gray-400" />
                     )}
                   </button>
                 </div>
 
                 <div className="flex items-center justify-between">
                   <div>
-                    <label className="text-lg font-medium">High Contrast</label>
-                    <p className="text-sm text-gray-300">Increase contrast for better visibility</p>
+                    <label className={`text-lg font-medium transition-colors duration-300 ${
+                      preferences.darkMode ? 'text-white' : 'text-gray-800'
+                    }`}>High Contrast</label>
+                    <p className={`text-sm transition-colors duration-300 ${
+                      preferences.darkMode ? 'text-gray-300' : 'text-gray-600'
+                    }`}>Increase contrast for better visibility</p>
                   </div>
                   <button
-                    onClick={() => setHighContrast(!highContrast)}
+                    onClick={() => updatePreference('contrast', preferences.contrast === 1 ? 1.2 : 1)}
                     className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                      highContrast ? 'bg-purple-600' : 'bg-gray-600'
+                      preferences.contrast > 1 ? 'bg-blue-600' : 'bg-gray-400'
                     }`}
                   >
                     <span
                       className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                        highContrast ? 'translate-x-6' : 'translate-x-1'
+                        preferences.contrast > 1 ? 'translate-x-6' : 'translate-x-1'
                       }`}
                     />
                   </button>
                 </div>
               </div>
-            </div>
+            </motion.div>
 
             {/* Audio Settings */}
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
-              <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
-                <Volume2 className="w-5 h-5 text-purple-400" />
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className={`backdrop-blur-sm rounded-3xl p-6 border shadow-xl transition-all duration-300 ${
+                preferences.darkMode
+                  ? 'bg-gray-800/60 border-gray-600'
+                  : 'bg-white/60 border-white/50'
+              }`}
+            >
+              <h2 className={`text-xl font-semibold mb-4 flex items-center gap-2 transition-colors duration-300 ${
+                preferences.darkMode ? 'text-white' : 'text-gray-800'
+              }`}>
+                <Volume2 className={`w-5 h-5 transition-colors duration-300 ${
+                  preferences.darkMode ? 'text-blue-400' : 'text-blue-600'
+                }`} />
                 Audio
               </h2>
               
               <div className="flex items-center justify-between">
                 <div>
-                  <label className="text-lg font-medium">Sound Effects</label>
-                  <p className="text-sm text-gray-300">Enable audio feedback and notifications</p>
+                  <label className={`text-lg font-medium transition-colors duration-300 ${
+                    preferences.darkMode ? 'text-white' : 'text-gray-800'
+                  }`}>Voice Responses</label>
+                  <p className={`text-sm transition-colors duration-300 ${
+                    preferences.darkMode ? 'text-gray-300' : 'text-gray-600'
+                  }`}>Enable voice responses from Hadassah</p>
                 </div>
                 <button
-                  onClick={() => setSoundEnabled(!soundEnabled)}
+                  onClick={() => updatePreference('voiceEnabled', !preferences.voiceEnabled)}
                   className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                    soundEnabled ? 'bg-purple-600' : 'bg-gray-600'
+                    preferences.voiceEnabled ? 'bg-blue-600' : 'bg-gray-400'
                   }`}
                 >
                   <span
                     className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                      soundEnabled ? 'translate-x-6' : 'translate-x-1'
+                      preferences.voiceEnabled ? 'translate-x-6' : 'translate-x-1'
                     }`}
                   />
-                  {soundEnabled ? (
-                    <Volume2 className="absolute left-1 w-3 h-3 text-purple-600" />
+                  {preferences.voiceEnabled ? (
+                    <Volume2 className="absolute left-1 w-3 h-3 text-blue-600" />
                   ) : (
-                    <VolumeX className="absolute right-1 w-3 h-3 text-gray-600" />
+                    <VolumeX className="absolute right-1 w-3 h-3 text-gray-400" />
                   )}
                 </button>
               </div>
-            </div>
+            </motion.div>
 
             {/* About Section */}
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
-              <h2 className="text-xl font-semibold mb-4">About</h2>
-              <div className="space-y-2 text-gray-300">
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className={`backdrop-blur-sm rounded-3xl p-6 border shadow-xl transition-all duration-300 ${
+                preferences.darkMode
+                  ? 'bg-gray-800/60 border-gray-600'
+                  : 'bg-white/60 border-white/50'
+              }`}
+            >
+              <h2 className={`text-xl font-semibold mb-4 transition-colors duration-300 ${
+                preferences.darkMode ? 'text-white' : 'text-gray-800'
+              }`}>About BarbraAI</h2>
+              <div className={`space-y-2 transition-colors duration-300 ${
+                preferences.darkMode ? 'text-gray-300' : 'text-gray-600'
+              }`}>
                 <p>Version: 1.0.0</p>
-                <p>Built with React and TypeScript</p>
-                <p>Powered by modern web technologies</p>
+                <p>Powered by Hadassah AI Engine</p>
+                <p>Built with React, TypeScript & Framer Motion</p>
+                <p>Your intelligent personal voice assistant</p>
               </div>
-            </div>
+            </motion.div>
           </div>
         </div>
       </div>
